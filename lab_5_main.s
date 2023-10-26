@@ -26,28 +26,35 @@ __reset:			; __reset is where the first instruction is located.
 ;********** Mainline Program ************
 	CALL	    INIT
 	CALL	    SWITCH
-	;call Ex1    ;TODO: uncomment this line to run EX1
+	CALL	    EX1    ;TODO: uncomment this line to run EX1
 	;call Ex2    ;TODO: uncomment this line to run EX2
 	;call Ex3    ;TODO: uncomment this line to run EX3
 	;call Ex4    ;TODO: uncomment this line to run EX4
 AGAIN:
- 	BRA	    AGAIN	; trap	
+ 	BRA	    AGAIN	; Trap program	
 INIT:
 				; LEDs on the Explorer board are connected to PORTA PINs
-				; these statments configure PORTA to drive the LEDs
+				; These statments configure PORTA to drive the LEDs
 	CLR	    TRISA	; Sets PORTA as output (DRIVE Common Anode LEDs)
 	CLR	    PORTA	; Sets PORTA outputs to all zeros (switch off LEDs)
-	CLR	    ANSA	; Set porta as digital I/O
+	CLR	    ANSA	; Set PORTA as digital I/O
 	CLR	    ODCA	; Set PORTA pins as normal digital I/O (not open drain)
 				; Switches on the Explorer board are connected to PORTD PINs
 				; These statments configure PORTD to drive the Switches
 	SETM	    TRISD	; Sets PORTD as intputs (DRIVE switches)
-	CLR	    ANSD	; Set portd as digital I/O
+	CLR	    ANSD	; Set PORTD as digital I/O
 	CLR	    ODCD	; Set PORTD pins as normal digital I/O (not open drain)
 	RETURN			; Go to the return address that was saved with the call instruction
 
 SWITCH:   
-	BSET	    TRISD, #13	; Set Portd D PIN 13 as Input PIN
+	BSET	    TRISD, #13	; Set PORTD PIN 13 as an input PIN
+	BSET	    TRISD, #7	; Set PORTD PIN 7 as an input PIN
+	
+EX1:
+	BTSS	    PORTD, #7	; Test is Switch S6
+	GOTO	    EX1_ON
+	BTSC	    PORTD, #7
+	GOTO	    EX1_OFF
 
 LOOP:	
 	BTSS	    PORTD, #13  ; Test if Switch S4		
@@ -55,9 +62,18 @@ LOOP:
 
 SW_OFF:	
 	BCLR	    PORTA, #7   ; Turn off LED 10  	 
-	GOTO	    LOOP
+	GOTO	    EX1
 
 SW_ON:	
 	BSET	    PORTA, #7   ; Turn on LED 10 	
+	GOTO	    EX1
+	RETURN
+	
+EX1_OFF:
+	BCLR	    PORTA, #6
+	GOTO	    LOOP
+
+EX1_ON:
+	BSET	    PORTA, #6
 	GOTO	    LOOP
 	RETURN

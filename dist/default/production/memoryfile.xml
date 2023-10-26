@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <executable name="dist/default/production/ELEN256_Lab_5.production.elf">
+    <memory name="data">
+      <units>bytes</units>
+      <length>32768</length>
+      <used>6</used>
+      <free>32762</free>
+    </memory>
+    <memory name="program">
+      <units>bytes</units>
+      <length>1056000</length>
+      <used>369</used>
+      <free>1055631</free>
+    </memory>
+  </executable>
+</project>

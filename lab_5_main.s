@@ -27,7 +27,7 @@ __reset:			; __reset is where the first instruction is located.
 	CALL	    INIT
 	CALL	    SWITCH
 	CALL	    EX1    ;TODO: uncomment this line to run EX1
-	;call Ex2    ;TODO: uncomment this line to run EX2
+	CALL	    EX2    ;TODO: uncomment this line to run EX2
 	;call Ex3    ;TODO: uncomment this line to run EX3
 	;call Ex4    ;TODO: uncomment this line to run EX4
 AGAIN:
@@ -49,12 +49,19 @@ INIT:
 SWITCH:   
 	BSET	    TRISD, #13	; Set PORTD PIN 13 as an input PIN
 	BSET	    TRISD, #7	; Set PORTD PIN 7 as an input PIN
+	BSET	    TRISD, #6
 	
 EX1:
 	BTSS	    PORTD, #7	; Test is Switch S6
 	GOTO	    EX1_ON
 	BTSC	    PORTD, #7
 	GOTO	    EX1_OFF
+	
+EX2:
+	BTSS	    PORTD, #6	; Test if switch S3
+	GOTO	    EX2_ON
+	BTSC	    PORTD, #6
+	GOTO	    EX2_OFF
 
 LOOP:	
 	BTSS	    PORTD, #13  ; Test if Switch S4		
@@ -62,11 +69,11 @@ LOOP:
 
 SW_OFF:	
 	BCLR	    PORTA, #7   ; Turn off LED 10  	 
-	GOTO	    EX1
+	GOTO	    EX2
 
 SW_ON:	
 	BSET	    PORTA, #7   ; Turn on LED 10 	
-	GOTO	    EX1
+	GOTO	    EX2
 	RETURN
 	
 EX1_OFF:
@@ -77,3 +84,15 @@ EX1_ON:
 	BSET	    PORTA, #6
 	GOTO	    LOOP
 	RETURN
+
+EX2_OFF:
+	BCLR	    PORTA, #4
+	GOTO	    EX1
+	
+EX2_ON:
+	MOV	    #0x30, W0
+	RLC	    W0, W1
+	MOV	    W1, PORTA
+	BSET	    PORTA, #4
+	GOTO	    EX1
+	RETURN	
